@@ -3,6 +3,8 @@
 var canvas = null;
 var ctx = null;
 
+var keysDown = {};
+
 var playerImage = new Image();
 var playerReady = false;
 
@@ -11,6 +13,15 @@ playerImage.onload = function() {
 }
 
 playerImage.src = "graphics/player1.png";
+
+var player = {
+	x : 100,
+	y : 100,
+	dx : 0,
+	dy : 0,
+	width : 20,
+	height : 125
+};
 
 function init() {
 	canvas = document.createElement("canvas");
@@ -26,6 +37,33 @@ function init() {
 	canvas.style["border"] = "solid";
 
 	ctx = canvas.getContext("2d");
+
+	document.addEventListener("keydown", function(e) {
+		keysDown[e.keyCode] = true;
+	});
+
+	document.addEventListener("keyup", function(e) {
+		delete keysDown[e.keyCode];
+	});
+}
+
+function update(dt) {
+	var left = 37 in keysDown;
+	var right = 39 in keysDown;
+	var jump = 38 in keysDown;
+
+	if(left) {
+		player.dx = -400 * dt;
+	} else if(right) {
+		player.dx = 400 * dt;
+	} else {
+		player.dx = 0;
+	}
+
+	player.dy += 16 * dt;
+
+	player.x += player.dx;
+	player.y += player.dy;
 }
 
 function draw() {
@@ -35,9 +73,23 @@ function draw() {
 	ctx.fillRect(0, 0, canvas.width, canvas.height);
 
 	if(playerReady) {
-		ctx.drawImage(playerImage, 100, 100);
+		ctx.drawImage(playerImage, player.x, player.y);
 	}
 }
 
+var then = Date.now();
+
+function loop() {
+	var now = Date.now();
+	var delta = (now - then) / 1000;
+
+	update(delta);
+	draw();
+
+	then = now;
+
+	requestAnimationFrame(loop);
+}
+
 init();
-draw();
+loop();
