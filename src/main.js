@@ -14,6 +14,15 @@ playerImage.onload = function() {
 
 playerImage.src = "graphics/player1.png";
 
+var groundReady = false;
+var ground = new Image();
+
+ground.onload = function() {
+    groundReady = true;
+}
+
+ground.src = "graphics/ground.png";
+
 var player = {
 	x : 100,
 	y : 100,
@@ -22,6 +31,8 @@ var player = {
 	width : 20,
 	height : 125
 };
+
+var level = TileMaps["level"];
 
 function init() {
 	canvas = document.createElement("canvas");
@@ -71,6 +82,28 @@ function draw() {
 
 	ctx.fillStyle = "#00001D";
 	ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+	if(groundReady) {
+		for(var i = 0; i < level.layers.length; ++i) {
+			var layer = level.layers[i];
+
+			if(layer.type == "tilelayer") {
+				for(var y = 0; y < layer.height; ++y) {
+					for(var x = 0; x < layer.width; ++x) {
+						var tile = layer.data[x + y * layer.width];
+						if(tile > 0) {
+							tile -= 1;
+							var columns = ground.width / level.tilewidth;
+							var u = tile % columns;
+							var v = Math.floor(tile / columns);
+							ctx.drawImage(ground, u * level.tilewidth, v * level.tileheight, level.tilewidth, level.tileheight,
+								x * level.tilewidth, y * level.tileheight, level.tilewidth, level.tileheight);
+						}
+					}
+				}
+			}
+		}
+	}
 
 	if(playerReady) {
 		ctx.drawImage(playerImage, player.x, player.y);
