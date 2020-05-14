@@ -34,6 +34,8 @@ function init() {
 
 	ctx = canvas.getContext("2d");
 
+	pixelated(ctx);
+
 	document.addEventListener("keydown", function(e) {
 		keysDown[e.keyCode] = true;
 	});
@@ -41,6 +43,11 @@ function init() {
 	document.addEventListener("keyup", function(e) {
 		delete keysDown[e.keyCode];
 	});
+
+	createEnemy(0, 300, 200);
+	createEnemy(0, 600, 300);
+	createEnemy(0, 800, 150);
+	console.log("enemies loaded: " + enemies.length);
 }
 
 function update(dt) {
@@ -73,6 +80,8 @@ function update(dt) {
 
 	player.x += player.dx;
 	player.y += player.dy;
+
+	updateEnemies(dt);
 }
 
 function draw() {
@@ -110,6 +119,8 @@ function draw() {
 			drawFrame(playerImage, player.x, player.y);
 		}
 	}
+
+	drawEnemies();
 }
 
 var then = Date.now();
