@@ -32,6 +32,21 @@ function init() {
 		delete keysDown[e.keyCode];
 	});
 
+	for(var i = 0; i < level.layers.length; ++i) {
+		var layer = level.layers[i];
+
+		if(layer.name == "Entities") {
+			for(var i = 0; i < layer.objects.length; ++i) {
+				var object = layer.objects[i];
+
+				if(object.type == "player") {
+					player.x = object.x;
+					player.y = object.y;
+				}
+			}
+		}
+	}
+
 	createEnemy(0, 300, 200);
 	createEnemy(0, 600, 300);
 	createEnemy(0, 800, 150);
