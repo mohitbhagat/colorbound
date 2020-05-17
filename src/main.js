@@ -5,7 +5,14 @@ var ctx = null;
 
 var keysDown = {};
 
+var camera = {
+	x : 0,
+	y : 0
+};
+
 var level = TileMaps["level"];
+
+const CAMERA_SPEED_FACTOR = 5;
 
 function init() {
 	canvas = document.createElement("canvas");
@@ -54,6 +61,9 @@ function init() {
 }
 
 function update(dt) {
+	camera.x += (player.x + player.width / 2 - canvas.width / 2 - camera.x) * dt * CAMERA_SPEED_FACTOR;
+	camera.y += (player.y + player.height / 2 - canvas.height / 2 - camera.y) * dt * CAMERA_SPEED_FACTOR;
+
 	updatePlayer(dt);
 	updateEnemies(dt);
 }
@@ -61,16 +71,28 @@ function update(dt) {
 function draw() {
 	ctx.clearRect(0, 0, canvas.width, canvas.height);
 
+	camera.x = Math.floor(camera.x);
+	camera.y = Math.floor(camera.y);
+
 	ctx.fillStyle = "#00001D";
 	ctx.fillRect(0, 0, canvas.width, canvas.height);
 
 	if(groundReady) {
+		var left = Math.floor(camera.x / level.tilewidth);
+		var top = Math.floor(camera.y / level.tileheight);
+		var right = Math.ceil((camera.x + canvas.width) / level.tilewidth);
+		var bottom = Math.ceil((camera.y + canvas.height) / level.tileheight);
+
 		for(var i = 0; i < level.layers.length; ++i) {
 			var layer = level.layers[i];
 
 			if(layer.type == "tilelayer") {
-				for(var y = 0; y < layer.height; ++y) {
-					for(var x = 0; x < layer.width; ++x) {
+				for(var y = top; y < bottom; ++y) {
+					if(y < 0 || y >= layer.height) continue;
+
+					for(var x = left; x < right; ++x) {
+						if(x < 0 || x >= layer.width) continue;
+
 						var tile = layer.data[x + y * layer.width];
 						if(tile > 0) {
 							tile -= 1;
@@ -78,7 +100,7 @@ function draw() {
 							var u = tile % columns;
 							var v = Math.floor(tile / columns);
 							ctx.drawImage(ground, u * level.tilewidth, v * level.tileheight, level.tilewidth, level.tileheight,
-								x * level.tilewidth, y * level.tileheight, level.tilewidth, level.tileheight);
+								x * level.tilewidth - camera.x, y * level.tileheight - camera.y, level.tilewidth, level.tileheight);
 						}
 					}
 				}

@@ -53,10 +53,10 @@ function updatePlayer(dt) {
 
 function drawPlayer() {
 	if(player.running) {
-		drawFrame(runFrames[player.frameIndex], player.x, player.y);
+		drawFrame(runFrames[player.frameIndex], player.x - camera.x, player.y - camera.y);
 	} else {
 		if(playerReady) {
-			drawFrame(playerImage, player.x, player.y);
+			drawFrame(playerImage, player.x - camera.x, player.y - camera.y);
 		}
 	}
 }

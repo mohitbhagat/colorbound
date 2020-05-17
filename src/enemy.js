@@ -29,7 +29,7 @@ function drawEnemies() {
     if(monsterReady) {
         for(var i = 0; i < enemies.length; ++i) {
             var enemy = enemies[i];
-            ctx.drawImage(monsterImage, enemy.x, enemy.y);
+            ctx.drawImage(monsterImage, enemy.x - camera.x, enemy.y - camera.y);
         }
     }
 }
