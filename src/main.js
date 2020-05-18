@@ -11,8 +11,47 @@ var camera = {
 };
 
 var level = TileMaps["level"];
+var collisionLayer = (function() {
+	for(var i = 0; i < level.layers.length; ++i) {
+		var layer = level.layers[i];
+		if(layer.name == "Main") {
+			return layer;
+		}
+	}
+
+	return null;
+})();
 
 const CAMERA_SPEED_FACTOR = 5;
+
+function collideLevel(x, y, w, h) {
+	var left = Math.floor(x / level.tilewidth);
+	var top = Math.floor(y / level.tileheight);
+	var right = Math.ceil((x + w) / level.tilewidth);
+	var bottom = Math.ceil((y + h) / level.tileheight);
+
+	if(right < left) {
+		var tmp = left;
+		left = right;
+		right = tmp;
+	}
+
+	if(bottom < top) {
+		var tmp = top;
+		top = bottom;
+		bottom = tmp;
+	}
+
+	for(var y = top; y < bottom; ++y) {
+		for(var x = left; x < right; ++x) {
+			if(collisionLayer.data[x + y * level.width] > 0) {
+				return true;
+			}
+		}
+	}
+
+	return false;
+}
 
 function init() {
 	canvas = document.createElement("canvas");

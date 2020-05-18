@@ -13,7 +13,13 @@ var player = {
 };
 
 function updatePlayer(dt) {
-	player.dy += 16 * dt;
+	if(collideLevel(player.x, player.y + 1, player.width, player.height)) {
+		player.grounded = true;
+		player.dy = 0;
+	} else {
+		player.grounded = false;
+		player.dy += 16 * dt;
+	}
 
 	var left = 37 in keysDown;
 	var right = 39 in keysDown;
@@ -47,8 +53,14 @@ function updatePlayer(dt) {
 		player.frameIndex = 0;
 	}
 
-	player.x += player.dx;
-	player.y += player.dy;
+	if(!collideLevel(player.x + player.dx, player.y, player.width, player.height)) {
+		player.x += player.dx;
+	}
+	if(!collideLevel(player.x, player.y + player.dy, player.width, player.height)) {
+		player.y += player.dy;
+	} else {
+		player.dy = 0;
+	}
 }
 
 function drawPlayer() {
