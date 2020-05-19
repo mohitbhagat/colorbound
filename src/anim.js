@@ -19,6 +19,22 @@ function updateAnim(anim, dt) {
     }
 }
 
-function drawFrame(image, x, y) {
-    ctx.drawImage(image, x, y);
+function drawFrame(image, x, y, frame, fw, fh, flip) {
+    var columns = image.width / fw;
+
+    var u = frame % columns;
+    var v = Math.floor(frame / columns);
+
+    if(!flip) {
+        ctx.drawImage(image, u * fw, v * fh, fw, fh, x, y, fw, fh);
+    } else {
+        ctx.save();
+
+        ctx.translate(x + fw, y);
+        ctx.scale(-1, 1);
+
+        ctx.drawImage(image, u * fw, v * fh, fw, fh, 0, 0, fw, fh);
+
+        ctx.restore();
+    }
 }

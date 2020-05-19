@@ -53,6 +53,29 @@ function collideLevel(x, y, w, h) {
 	return false;
 }
 
+function drawFrame(image, x, y, frame, fw, fh, flip, scaleX, scaleY) {
+	scaleX = scaleX || 1;
+	scaleY = scaleY || 1;
+
+	var columns = image.width / fw;
+
+	var u = frame % columns;
+	var v = Math.floor(frame / columns);
+
+	if(!flip) {
+		ctx.drawImage(image, u * fw, v * fh, fw, fh, x, y, fw * scaleX, fh * scaleY);
+	} else {
+		ctx.save();
+
+		ctx.translate(x + fw, y);
+		ctx.scale(-1, 1);
+
+		ctx.drawImage(image, u * fw, v * fh, fw, fh, 0, 0, fw, fh);
+
+		ctx.restore();
+	}
+}
+
 function init() {
 	canvas = document.createElement("canvas");
 	document.body.appendChild(canvas);
@@ -135,11 +158,7 @@ function draw() {
 						var tile = layer.data[x + y * layer.width];
 						if(tile > 0) {
 							tile -= 1;
-							var columns = ground.width / level.tilewidth;
-							var u = tile % columns;
-							var v = Math.floor(tile / columns);
-							ctx.drawImage(ground, u * level.tilewidth, v * level.tileheight, level.tilewidth, level.tileheight,
-								x * level.tilewidth - camera.x, y * level.tileheight - camera.y, level.tilewidth, level.tileheight);
+							drawFrame(ground, x * level.tilewidth - camera.x, y * level.tileheight - camera.y, tile, level.tilewidth, level.tileheight, false);
 						}
 					}
 				}
