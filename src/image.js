@@ -64,3 +64,12 @@ starImage.onload = function() {
 }
 
 starImage.src = "graphics/star.png";
+
+var rocketReady = false;
+var rocketImage = new Image();
+
+rocketImage.onload = function() {
+    rocketReady = true;
+}
+
+rocketImage.src = "graphics/rocket.png";
