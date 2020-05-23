@@ -12,6 +12,7 @@ var player = {
 	animFrameTime : 1 / 12,
 	flipped : false,
     jumped : false,
+	shotTime: 0,
 	loop : false
 };
 
@@ -28,6 +29,9 @@ function updatePlayer(dt) {
 	var left = (37 in keysDown) || (65 in keysDown);
 	var right = (39 in keysDown) || (68 in keysDown);
 	var jump = 38 in keysDown;
+	var shootRed = 90 in keysDown;
+	var shootBlue = 88 in keysDown;
+	var shootYellow = 67 in keysDown;
 
 	if(jump && player.grounded) {
 		player.grounded = false;
@@ -61,6 +65,28 @@ function updatePlayer(dt) {
 		player.anim = PLAYER_ANIM_JUMP;
 		player.animFrameTime = PLAYER_JUMP_FRAME_TIME;
 		player.loop = false;
+	}
+
+	var offX = player.flipped ? -20 : 60;
+	var offY = 45;
+
+	if(shootRed && player.shotTime <= 0) {
+		shootWave(WAVE_SHOT_RED, player.x + offX, player.y + offY, player.flipped ? -1 : 1);
+		player.shotTime = 0.6;
+	}
+
+	if(shootBlue && player.shotTime <= 0) {
+		shootWave(WAVE_SHOT_BLUE, player.x + offX, player.y + offY, player.flipped ? -1 : 1);
+		player.shotTime = 0.6;
+	}
+
+	if(shootYellow && player.shotTime <= 0) {
+		shootWave(WAVE_SHOT_YELLOW, player.x + offX, player.y + offY, player.flipped ? -1 : 1);
+		player.shotTime = 0.6;
+	}
+
+	if(player.shotTime > 0) {
+		player.shotTime -= dt;
 	}
 
 	if(!collideLevel(player.x + player.dx, player.y, player.width, player.height)) {

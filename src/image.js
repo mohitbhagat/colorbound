@@ -36,6 +36,15 @@ const EXPLOSION_FRAME_TIME = 1 / 30;
 const EXPLOSION_FRAME_WIDTH = 120;
 const EXPLOSION_FRAME_HEIGHT = 94;
 
+var rocketReady = false;
+var rocketImage = new Image();
+
+rocketImage.onload = function() {
+    rocketReady = true;
+}
+
+rocketImage.src = "graphics/rocket.png";
+
 var playerReady = false;
 var playerImage = new Image();
 
@@ -56,6 +65,33 @@ const PLAYER_ANIM_RUN = [6,7,8,9,10,11,12,13];
 const PLAYER_ANIM_STAND = [0];
 const PLAYER_ANIM_JUMP = [3,4,5];
 
+var redWaveReady = false;
+var redWaveImage = new Image();
+
+redWaveImage.onload = function() {
+    redWaveReady = true;
+}
+
+redWaveImage.src = "graphics/redwave.png";
+
+var blueWaveReady = false;
+var blueWaveImage = new Image();
+
+blueWaveImage.onload = function() {
+    blueWaveReady = true;
+}
+
+blueWaveImage.src = "graphics/bluewave.png";
+
+var yellowWaveReady = false;
+var yellowWaveImage = new Image();
+
+yellowWaveImage.onload = function() {
+    yellowWaveReady = true;
+}
+
+yellowWaveImage.src = "graphics/yellowwave.png";
+
 var starReady = false;
 var starImage = new Image();
 
@@ -64,12 +100,3 @@ starImage.onload = function() {
 }
 
 starImage.src = "graphics/star.png";
-
-var rocketReady = false;
-var rocketImage = new Image();
-
-rocketImage.onload = function() {
-    rocketReady = true;
-}
-
-rocketImage.src = "graphics/rocket.png";

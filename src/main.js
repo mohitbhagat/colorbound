@@ -116,9 +116,9 @@ function init() {
 		}
 	}
 
-	createEnemy(0, 300, 200);
-	createEnemy(0, 600, 300);
-	createEnemy(0, 800, 150);
+	createEnemy(0, 300, 200, WAVE_SHOT_RED);
+	createEnemy(0, 600, 300, WAVE_SHOT_BLUE);
+	createEnemy(0, 800, 150, WAVE_SHOT_YELLOW);
 	console.log("enemies loaded: " + enemies.length);
 }
 
@@ -126,9 +126,10 @@ function update(dt) {
 	camera.x += (player.x + player.width / 2 - canvas.width / 2 - camera.x) * dt * CAMERA_SPEED_FACTOR;
 	camera.y += (player.y + player.height / 2 - canvas.height / 2 - camera.y) * dt * CAMERA_SPEED_FACTOR;
 
-	updatePlayer(dt);
 	updateEnemies(dt);
 	updateRockets(dt);
+	updatePlayer(dt);
+	updateWaves(dt);
 }
 
 function draw() {
@@ -168,6 +169,7 @@ function draw() {
 	}
 
 	drawPlayer();
+	drawWaves();
 	drawEnemies();
 	drawRockets();
 }
