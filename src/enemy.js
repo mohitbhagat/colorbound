@@ -67,7 +67,6 @@ function updateEnemies(dt) {
         if(enemy.shootTimer <= 0) {
             enemy.shootTimer = ENEMY_SHOOT_COOLDOWN;
             shootRocket(enemy.x + enemy.width / 2 - ROCKET_WIDTH / 2, enemy.y + enemy.height / 2 - ROCKET_HEIGHT / 2, angle);
-            console.log("enemy shooting at angle", angle);
         }
 
         if(enemy.hit) {

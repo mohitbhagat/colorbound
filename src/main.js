@@ -119,7 +119,6 @@ function init() {
 	createEnemy(0, 300, 200, WAVE_SHOT_RED);
 	createEnemy(0, 600, 300, WAVE_SHOT_BLUE);
 	createEnemy(0, 800, 150, WAVE_SHOT_YELLOW);
-	console.log("enemies loaded: " + enemies.length);
 }
 
 function update(dt) {
