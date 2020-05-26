@@ -129,6 +129,7 @@ function update(dt) {
 	updateRockets(dt);
 	updatePlayer(dt);
 	updateWaves(dt);
+	updateExplosions(dt);
 }
 
 function draw() {
@@ -171,6 +172,7 @@ function draw() {
 	drawWaves();
 	drawEnemies();
 	drawRockets();
+	drawExplosions();
 }
 
 var then = Date.now();

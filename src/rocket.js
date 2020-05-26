@@ -21,10 +21,12 @@ function updateRockets(dt) {
         var dist2player = distanceSqr(player.x + player.width / 2, player.y + player.height / 2, rocket.x, rocket.y);
 
         if(dist2player < 32 * 32) {
+            addExplosion(rocket.x - EXPLOSION_FRAME_WIDTH / 2, rocket.y - EXPLOSION_FRAME_HEIGHT / 2);
             rockets.splice(i, 1);
         }
 
         if(collideLevel(rocket.x, rocket.y, ROCKET_WIDTH, ROCKET_HEIGHT)) {
+            addExplosion(rocket.x - EXPLOSION_FRAME_WIDTH / 2, rocket.y - EXPLOSION_FRAME_HEIGHT / 2);
             rockets.splice(i, 1);
         }
 

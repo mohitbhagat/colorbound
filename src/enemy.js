@@ -9,6 +9,8 @@ const ENEMY_SPRITE_OFF_Y = 18;
 const ENEMY_SHOOT_COOLDOWN = 1;
 const ENEMY_CHASE_SPEED = 8;
 
+const ENEMY_START_HEALTH = 1;
+
 function createEnemy(type, x, y, color) {
     enemies.push({
         type : type,
@@ -26,7 +28,7 @@ function createEnemy(type, x, y, color) {
         animTimer : 0,
         frameTime : 0,
         shootTimer : 0,
-        health : 1,
+        health : ENEMY_START_HEALTH,
         color : color
     });
 }
@@ -54,7 +56,6 @@ function updateEnemies(dt) {
         }
 
         var dist2 = distanceSqr(enemy.x, enemy.y, player.x, player.y);
-
         var angle = Math.atan2((player.y + player.height / 2) - (enemy.y + enemy.height / 2), (player.x + player.width / 2) - (enemy.x + enemy.width / 2));
 
         enemy.dx = Math.cos(angle) * ENEMY_CHASE_SPEED * dt;
@@ -72,6 +73,7 @@ function updateEnemies(dt) {
         if(enemy.hit) {
             enemy.health -= 1;
             if(enemy.health <= 0) {
+                addExplosion(enemy.x - EXPLOSION_FRAME_WIDTH / 2, enemy.y - EXPLOSION_FRAME_HEIGHT / 2);
                 enemies.splice(i, 1);
             }
             enemy.hit = false;
