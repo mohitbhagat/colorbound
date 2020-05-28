@@ -7,6 +7,9 @@ function addExplosion(x, y) {
         frame : 0,
         timer : 0
     });
+
+    shakeTimer = 0.2;
+    shakeMag = 15;
 }
 
 function updateExplosions(dt) {

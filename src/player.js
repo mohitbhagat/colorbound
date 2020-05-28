@@ -73,16 +73,22 @@ function updatePlayer(dt) {
 	if(shootRed && player.shotTime <= 0) {
 		shootWave(WAVE_SHOT_RED, player.x + offX, player.y + offY, player.flipped ? -1 : 1);
 		player.shotTime = 0.6;
+		shakeMag = 10;
+		shakeTimer = 0.15;
 	}
 
 	if(shootBlue && player.shotTime <= 0) {
 		shootWave(WAVE_SHOT_BLUE, player.x + offX, player.y + offY, player.flipped ? -1 : 1);
 		player.shotTime = 0.6;
+		shakeMag = 10;
+		shakeTimer = 0.15;
 	}
 
 	if(shootYellow && player.shotTime <= 0) {
 		shootWave(WAVE_SHOT_YELLOW, player.x + offX, player.y + offY, player.flipped ? -1 : 1);
 		player.shotTime = 0.6;
+		shakeMag = 10;
+		shakeTimer = 0.15;
 	}
 
 	if(player.shotTime > 0) {

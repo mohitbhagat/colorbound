@@ -22,6 +22,9 @@ var collisionLayer = (function() {
 	return null;
 })();
 
+var shakeMag = 2;
+var shakeTimer = 0;
+
 const CAMERA_SPEED_FACTOR = 5;
 
 function collideLevel(x, y, w, h) {
@@ -124,6 +127,13 @@ function init() {
 function update(dt) {
 	camera.x += (player.x + player.width / 2 - canvas.width / 2 - camera.x) * dt * CAMERA_SPEED_FACTOR;
 	camera.y += (player.y + player.height / 2 - canvas.height / 2 - camera.y) * dt * CAMERA_SPEED_FACTOR;
+
+	if(shakeTimer > 0) {
+		camera.x += Math.random() * (shakeMag * 2) - shakeMag;
+		camera.y += Math.random() * (shakeMag * 2) - shakeMag;
+
+		shakeTimer -= dt;
+	}
 
 	updateEnemies(dt);
 	updateRockets(dt);
