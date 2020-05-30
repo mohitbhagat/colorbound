@@ -13,8 +13,16 @@ var player = {
 	flipped : false,
     jumped : false,
 	shotTime: 0,
+	health: 5,
 	loop : false
 };
+
+function collidePlayer(x, y, w, h, callback) {
+	if(x + w < player.x || player.x + player.width < x) return;
+	if(y + h < player.y || player.y + player.height < y) return;
+
+	callback();
+}
 
 function move(ent, x, y, collideX, collideY) {
 	const SAMPLES = 5;

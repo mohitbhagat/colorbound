@@ -63,8 +63,11 @@ function updateEnemies(dt) {
         enemy.dx = Math.cos(angle) * ENEMY_CHASE_SPEED * dt;
         enemy.dy = Math.sin(angle) * ENEMY_CHASE_SPEED * dt;
 
-        enemy.x += enemy.dx;
-        enemy.y += enemy.dy;
+        move(enemy, enemy.dx, enemy.dy, function() {
+            enemy.dx = 0;
+        }, function() {
+            enemy.dy = 0;
+        });
 
         enemy.shootTimer -= dt;
         if(enemy.shootTimer <= 0 && canShoot) {
