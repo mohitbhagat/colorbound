@@ -56,6 +56,8 @@ function updateEnemies(dt) {
         }
 
         var dist2 = distanceSqr(enemy.x, enemy.y, player.x, player.y);
+
+        var canShoot = !collideLineLevel(enemy.x + enemy.width / 2, enemy.y + enemy.height / 2, player.x, player.y);
         var angle = Math.atan2((player.y + player.height / 2) - (enemy.y + enemy.height / 2), (player.x + player.width / 2) - (enemy.x + enemy.width / 2));
 
         enemy.dx = Math.cos(angle) * ENEMY_CHASE_SPEED * dt;
@@ -65,7 +67,7 @@ function updateEnemies(dt) {
         enemy.y += enemy.dy;
 
         enemy.shootTimer -= dt;
-        if(enemy.shootTimer <= 0) {
+        if(enemy.shootTimer <= 0 && canShoot) {
             enemy.shootTimer = ENEMY_SHOOT_COOLDOWN;
             shootRocket(enemy.x + enemy.width / 2 - ROCKET_WIDTH / 2, enemy.y + enemy.height / 2 - ROCKET_HEIGHT / 2, angle);
         }

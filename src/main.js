@@ -79,6 +79,28 @@ function drawFrame(image, x, y, frame, fw, fh, flip, scaleX, scaleY) {
 	}
 }
 
+function collideLineLevel(x1, y1, x2, y2) {
+	return collideLevel(x1, y1, x2 - x1, y2 - y1);
+}
+
+function collideLevelCircle(x, y, radius) {
+	var left = Math.floor((x - radius) / level.tilewidth);
+	var right = Math.ceil((x + radius) / level.tilewidth);
+	var top = Math.floor((y - radius) / level.tileheight);
+	var bottom = Math.ceil((y + radius) / level.tileheight);
+
+	for(var y = top; y < bottom; ++y) {
+		for(var x = left; x < right; ++x) {
+			var tile = level.layers[0].data[x + y * level.width];
+			if(tile > 0) {
+				return true;
+			}
+		}
+	}
+
+	return false;
+}
+
 function init() {
 	canvas = document.createElement("canvas");
 	document.body.appendChild(canvas);
