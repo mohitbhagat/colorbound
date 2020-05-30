@@ -16,6 +16,35 @@ var player = {
 	loop : false
 };
 
+function move(ent, x, y, collideX, collideY) {
+	const SAMPLES = 5;
+
+	var moveX = x / SAMPLES;
+	var moveY = y / SAMPLES;
+
+	for(var i = 0; i < SAMPLES; ++i) {
+		if(!collideLevel(ent.x + moveX, ent.y, ent.width, ent.height)) {
+			ent.x += moveX;
+		} else {
+			if(collideX) {
+				collideX();
+			}
+			break;
+		}
+	}
+
+	for(var i = 0; i < SAMPLES; ++i) {
+		if(!collideLevel(ent.x, ent.y + moveY, ent.width, ent.height)) {
+			ent.y += moveY;
+		} else {
+			if(collideY) {
+				collideY();
+			}
+			break;
+		}
+	}
+}
+
 function updatePlayer(dt) {
 	if(collideLevel(player.x, player.y + 1, player.width, player.height)) {
 		player.grounded = true;
@@ -95,14 +124,11 @@ function updatePlayer(dt) {
 		player.shotTime -= dt;
 	}
 
-	if(!collideLevel(player.x + player.dx, player.y, player.width, player.height)) {
-		player.x += player.dx;
-	}
-	if(!collideLevel(player.x, player.y + player.dy, player.width, player.height)) {
-		player.y += player.dy;
-	} else {
+	move(player, player.dx, player.dy, function() {
+		player.dx = 0;
+	}, function() {
 		player.dy = 0;
-	}
+	});
 
 	if(player.anim) {
 		player.frameIndex = Math.floor(player.animTimer / player.animFrameTime);
