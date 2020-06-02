@@ -16,6 +16,11 @@ const ENEMY_STATE_NONE = 0;
 const ENEMY_STATE_SEEN_PLAYER = 1;
 
 const ENEMY_START_HEALTH = 1;
+const ENEMY_HOVER_AMPLITUDE = 2;
+const ENEMY_HOVER_PERIOD_FACTOR = 10;
+
+const ENEMY_COLLISION_RADIUS = 64;
+const ENEMY_PUSH_FORCE = 10;
 
 const ENEMY_SPRITE_OFF_X = 41;
 const ENEMY_SPRITE_OFF_Y = 18;
@@ -43,6 +48,7 @@ function createEnemy(type, x, y, color) {
         animTimer : 0,
         frameTime : 0,
         health : ENEMY_START_HEALTH,
+        hoverTimer : 0,
         color : color
     });
 }
@@ -62,6 +68,8 @@ function collideEnemy(x, y, w, h, callback) {
 function updateEnemies(dt) {
     for(var i = 0; i < enemies.length; ++i) {
         var enemy = enemies[i];
+
+        enemy.hoverTimer += dt;
 
         if(enemy.x < player.x) {
             enemy.dir = 1;
@@ -126,6 +134,17 @@ function updateEnemies(dt) {
             }
         }
 
+        for(var j = i + 1; j < enemies.length; ++j) {
+            var otherEnemy = enemies[j];
+n            var dist2 = distanceSqr(enemy.x, enemy.y, otherEnemy.x, otherEnemy.y);
+n            if(dist2 < ENEMY_COLLISION_RADIUS * ENEMY_COLLISION_RADIUS) {
+                var angle = Math.atan2(otherEnemy.y - enemy.y, otherEnemy.x - enemy.x);
+n                enemy.dx -= Math.cos(angle) * (ENEMY_PUSH_FORCE / 2);
+                enemy.dy -= Math.sin(angle) * (ENEMY_PUSH_FORCE / 2);
+n                otherEnemy.dx += Math.cos(angle) * (ENEMY_PUSH_FORCE / 2);
+                otherEnemy.dy += Math.sin(angle) * (ENEMY_PUSH_FORCE / 2);
+            }
+        }
         if(enemy.hit) {
             enemy.health -= 1;
             if(enemy.health <= 0) {
@@ -163,7 +182,7 @@ function drawEnemies() {
             var enemy = enemies[i];
 
             var px = enemy.x - camera.x - ENEMY_SPRITE_OFF_X;
-            var py = enemy.y - camera.y - ENEMY_SPRITE_OFF_Y;
+            var py = enemy.y - camera.y - ENEMY_SPRITE_OFF_Y + Math.sin(enemy.hoverTimer * ENEMY_HOVER_PERIOD_FACTOR) * ENEMY_HOVER_AMPLITUDE;
 
             if(enemy.frames) {
                 drawFrame(enemyImage, px, py, enemy.frames[enemy.frameIndex], ENEMY_FRAME_WIDTH, ENEMY_FRAME_HEIGHT, enemy.dir < 0);
