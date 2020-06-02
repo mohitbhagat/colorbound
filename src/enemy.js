@@ -1,15 +1,27 @@
 var enemies = [];
 
-const ENEMY_WIDTH = 58;
-const ENEMY_HEIGHT = 87;
+const ENEMY_TANGIBLE_TIME = 4;
+const ENEMY_RADIUS = 20;
+
+const ENEMY_TYPE_LASER = 0;
+const ENEMY_TYPE_ROCKET  = 1;
+
+const ENEMY_ROCKET_SHOOT_COOLDOWN = 2;
+const ENEMY_ROCKET_SIGHT_RADIUS = 400;
+const ENEMY_ROCKET_CHASE_RADIUS = 300;
+const ENEMY_ROCKET_FOLLOW_RADIUS = 800;
+const ENEMY_ROCKET_ACCEL_SPEED = 4;
+
+const ENEMY_STATE_NONE = 0;
+const ENEMY_STATE_SEEN_PLAYER = 1;
+
+const ENEMY_START_HEALTH = 1;
 
 const ENEMY_SPRITE_OFF_X = 41;
 const ENEMY_SPRITE_OFF_Y = 18;
 
-const ENEMY_SHOOT_COOLDOWN = 1;
-const ENEMY_CHASE_SPEED = 8;
-
-const ENEMY_START_HEALTH = 1;
+const ENEMY_WIDTH = 58;
+const ENEMY_HEIGHT = 87;
 
 function createEnemy(type, x, y, color) {
     enemies.push({
@@ -18,6 +30,9 @@ function createEnemy(type, x, y, color) {
         y : y,
         dx : 0,
         dy : 0,
+        tangibleTime : 0,
+        shootTimer : 0,
+        state : ENEMY_STATE_SEEN_PLAYER,
         width : ENEMY_WIDTH,
         height : ENEMY_HEIGHT,
         hit : false,
@@ -27,7 +42,6 @@ function createEnemy(type, x, y, color) {
         loop : true,
         animTimer : 0,
         frameTime : 0,
-        shootTimer : 0,
         health : ENEMY_START_HEALTH,
         color : color
     });
@@ -55,24 +69,61 @@ function updateEnemies(dt) {
             enemy.dir = -1;
         }
 
-        var dist2 = distanceSqr(enemy.x, enemy.y, player.x, player.y);
-
-        var canShoot = !collideLineLevel(enemy.x + enemy.width / 2, enemy.y + enemy.height / 2, player.x, player.y);
-        var angle = Math.atan2((player.y + player.height / 2) - (enemy.y + enemy.height / 2), (player.x + player.width / 2) - (enemy.x + enemy.width / 2));
-
-        enemy.dx = Math.cos(angle) * ENEMY_CHASE_SPEED * dt;
-        enemy.dy = Math.sin(angle) * ENEMY_CHASE_SPEED * dt;
-
-        move(enemy, enemy.dx, enemy.dy, function() {
-            enemy.dx = 0;
-        }, function() {
-            enemy.dy = 0;
-        });
-
         enemy.shootTimer -= dt;
-        if(enemy.shootTimer <= 0 && canShoot) {
-            enemy.shootTimer = ENEMY_SHOOT_COOLDOWN;
-            shootRocket(enemy.x + enemy.width / 2 - ROCKET_WIDTH / 2, enemy.y + enemy.height / 2 - ROCKET_HEIGHT / 2, angle);
+
+        if(enemy.type == ENEMY_TYPE_ROCKET) {
+            enemy.dx *= 0.97;
+            enemy.dy *= 0.97;
+
+            if(enemy.state == ENEMY_STATE_SEEN_PLAYER) {
+                var dist2 = distanceSqr(enemy.x, enemy.y, player.x, player.y);
+
+                var canShoot = !collideLineLevel(enemy.x + enemy.width / 2, enemy.y + enemy.height / 2, player.x, player.y);
+
+                if(dist2 < ENEMY_ROCKET_FOLLOW_RADIUS * ENEMY_ROCKET_FOLLOW_RADIUS) {
+                    var angle = Math.atan2((player.y + player.height / 2) - (enemy.y + enemy.height / 2), (player.x + player.width / 2) - (enemy.x + enemy.width / 2));
+
+                    if(canShoot && dist2 < ENEMY_ROCKET_CHASE_RADIUS * ENEMY_ROCKET_CHASE_RADIUS) {
+                        if(enemy.shootTimer <= 0) {
+                            enemy.shootTimer = ENEMY_ROCKET_SHOOT_COOLDOWN;
+                            shootRocket(enemy.x + enemy.width / 2 - ROCKET_WIDTH / 2, enemy.y + enemy.height / 2 - ROCKET_HEIGHT / 2, angle);
+                        }
+
+                        enemy.frameTime = 1;
+                        enemy.frames = ENEMY_ANIM_STOP;
+                        enemy.loop = false;
+                    } else {
+                        var dx = 0;
+                        var dy = 0;
+
+                        if(player.x + player.width / 2 < enemy.x + enemy.width / 2) {
+                            dx = -ENEMY_ROCKET_ACCEL_SPEED * dt;
+                        } else {
+                            dx = ENEMY_ROCKET_ACCEL_SPEED * dt;
+                        }
+
+                        var py = player.y + player.height / 2;
+                        var ey = enemy.y + enemy.height / 2;
+
+                        if(py < ey) {
+                            dy = -ENEMY_ROCKET_ACCEL_SPEED * dt;
+                        } else {
+                            dy = ENEMY_ROCKET_ACCEL_SPEED * dt;
+                        }
+
+                        enemy.loop = false;
+                        if(enemy.frames != ENEMY_ANIM_MOVE) {
+                            enemy.animTimer = 0;
+                        }
+
+                        enemy.frames = ENEMY_ANIM_MOVE;
+                        enemy.frameTime = 1 / 3;
+
+                        enemy.dx += dx;
+                        enemy.dy += dy;
+                    }
+                }
+            }
         }
 
         if(enemy.hit) {
@@ -83,9 +134,6 @@ function updateEnemies(dt) {
             }
             enemy.hit = false;
         }
-
-        enemy.frames = ENEMY_ANIM_MOVE;
-        enemy.frameTime = 1 / 3;
 
         if(enemy.frames) {
             enemy.frameIndex = Math.floor(enemy.animTimer / enemy.frameTime);
@@ -100,6 +148,12 @@ function updateEnemies(dt) {
 
             enemy.animTimer += dt;
         }
+
+        move(enemy, enemy.dx, enemy.dy, function() {
+            enemy.dx = 0;
+        }, function() {
+            enemy.dy = 0;
+        });
     }
 }
 
