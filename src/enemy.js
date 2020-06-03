@@ -97,6 +97,10 @@ function updateEnemies(dt) {
                             shootRocket(enemy.x + enemy.width / 2 - ROCKET_WIDTH / 2, enemy.y + enemy.height / 2 - ROCKET_HEIGHT / 2, angle);
                         }
 
+                        if(enemy.anim != ENEMY_ANIM_STOP) {
+                            enemy.animTimer = 0;
+                        }
+
                         enemy.frameTime = 1;
                         enemy.frames = ENEMY_ANIM_STOP;
                         enemy.loop = false;
