@@ -185,11 +185,19 @@ function drawEnemies() {
         for(var i = 0; i < enemies.length; ++i) {
             var enemy = enemies[i];
 
+            ctx.globalAlpha = 1;
+
             var px = enemy.x - camera.x - ENEMY_SPRITE_OFF_X;
             var py = enemy.y - camera.y - ENEMY_SPRITE_OFF_Y + Math.sin(enemy.hoverTimer * ENEMY_HOVER_PERIOD_FACTOR) * ENEMY_HOVER_AMPLITUDE;
 
             if(enemy.frames) {
-                drawFrame(enemyImage, px, py, enemy.frames[enemy.frameIndex], ENEMY_FRAME_WIDTH, ENEMY_FRAME_HEIGHT, enemy.dir < 0);
+                if(enemy.color == WAVE_SHOT_RED) {
+                    drawFrame(redEnemyImage, px, py, enemy.frames[enemy.frameIndex], ENEMY_FRAME_WIDTH, ENEMY_FRAME_HEIGHT, enemy.dir < 0);
+                } else if(enemy.color == WAVE_SHOT_BLUE) {
+                    drawFrame(enemyImage, px, py, enemy.frames[enemy.frameIndex], ENEMY_FRAME_WIDTH, ENEMY_FRAME_HEIGHT, enemy.dir < 0);
+                } else if(enemy.color == WAVE_SHOT_YELLOW) {
+                    drawFrame(yellowEnemyImage, px, py, enemy.frames[enemy.frameIndex], ENEMY_FRAME_WIDTH, ENEMY_FRAME_HEIGHT, enemy.dir < 0);
+                }
             }
         }
     }

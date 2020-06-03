@@ -100,3 +100,30 @@ starImage.onload = function() {
 }
 
 starImage.src = "graphics/star.png";
+
+var doorReady = false;
+var doorImage = new Image();
+
+doorImage.onload = function() {
+    doorReady = true;
+}
+
+doorImage.src = "graphics/door.png";
+
+var redEnemyReady = false;
+var redEnemyImage = new Image();
+
+redEnemyImage.onload = function() {
+    redEnemyReady = true;
+}
+
+redEnemyImage.src = "graphics/redenemy.png";
+
+var yellowEnemyReady = false;
+var yellowEnemyImage = new Image();
+
+yellowEnemyImage.onload = function() {
+    yellowEnemyReady = true;
+}
+
+yellowEnemyImage.src = "graphics/yellowenemy.png";
