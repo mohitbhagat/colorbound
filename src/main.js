@@ -136,14 +136,18 @@ function init() {
 				if(object.type == "player") {
 					player.x = object.x;
 					player.y = object.y;
+				} else if(object.type == "enemy") {
+					if(object.name == "red") {
+						createSpawner(object.x, object.y, ENEMY_TYPE_ROCKET, WAVE_SHOT_RED);
+					} else if(object.name == "blue") {
+						createSpawner(object.x, object.y, ENEMY_TYPE_ROCKET, WAVE_SHOT_BLUE);
+					} else if(object.name == "yellow") {
+						createSpawner(object.x, object.y, ENEMY_TYPE_ROCKET, WAVE_SHOT_YELLOW);
+					}
 				}
 			}
 		}
 	}
-
-	createEnemy(0, 300, 200, WAVE_SHOT_RED);
-	createEnemy(0, 600, 300, WAVE_SHOT_BLUE);
-	createEnemy(0, 800, 150, WAVE_SHOT_YELLOW);
 }
 
 function update(dt) {
@@ -162,6 +166,7 @@ function update(dt) {
 	updatePlayer(dt);
 	updateWaves(dt);
 	updateExplosions(dt);
+	updateSpawners(dt);
 }
 
 function draw() {
@@ -200,6 +205,7 @@ function draw() {
 		}
 	}
 
+	drawSpawners();
 	drawPlayer();
 	drawWaves();
 	drawEnemies();
