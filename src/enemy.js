@@ -1,5 +1,7 @@
 var enemies = [];
 
+var enemiesKilled = 0;
+
 const ENEMY_TANGIBLE_TIME = 4;
 const ENEMY_RADIUS = 20;
 
@@ -154,6 +156,8 @@ n                otherEnemy.dx += Math.cos(angle) * (ENEMY_PUSH_FORCE / 2);
             if(enemy.health <= 0) {
                 addExplosion(enemy.x - EXPLOSION_FRAME_WIDTH / 2, enemy.y - EXPLOSION_FRAME_HEIGHT / 2);
                 enemies.splice(i, 1);
+
+                ++enemiesKilled;
             }
             enemy.hit = false;
         }

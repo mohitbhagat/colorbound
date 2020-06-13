@@ -1,3 +1,9 @@
+"use strict";
+
+const PLAYER_START_AMMO = 3;
+const PLAYER_SHOT_TIME = 0.6;
+const PLAYER_START_HEALTH = 5;
+
 var player = {
 	x : 100,
 	y : 100,
@@ -13,16 +19,10 @@ var player = {
 	flipped : false,
     jumped : false,
 	shotTime: 0,
-	health: 5,
+	ammo : PLAYER_START_AMMO,
+	health: PLAYER_START_HEALTH,
 	loop : false
 };
-
-function collidePlayer(x, y, w, h, callback) {
-	if(x + w < player.x || player.x + player.width < x) return;
-	if(y + h < player.y || player.y + player.height < y) return;
-
-	callback();
-}
 
 function move(ent, x, y, collideX, collideY) {
 	const SAMPLES = 5;
@@ -51,6 +51,13 @@ function move(ent, x, y, collideX, collideY) {
 			break;
 		}
 	}
+}
+
+function collidePlayer(x, y, w, h, callback) {
+	if(x + w < player.x || player.x + player.width < x) return;
+	if(y + h < player.y || player.y + player.height < y) return;
+
+	callback();
 }
 
 function updatePlayer(dt) {
@@ -109,21 +116,21 @@ function updatePlayer(dt) {
 
 	if(shootRed && player.shotTime <= 0) {
 		shootWave(WAVE_SHOT_RED, player.x + offX, player.y + offY, player.flipped ? -1 : 1);
-		player.shotTime = 0.6;
+		player.shotTime = PLAYER_SHOT_TIME;
 		shakeMag = 10;
 		shakeTimer = 0.15;
 	}
 
 	if(shootBlue && player.shotTime <= 0) {
 		shootWave(WAVE_SHOT_BLUE, player.x + offX, player.y + offY, player.flipped ? -1 : 1);
-		player.shotTime = 0.6;
+		player.shotTime = PLAYER_SHOT_TIME;
 		shakeMag = 10;
 		shakeTimer = 0.15;
 	}
 
 	if(shootYellow && player.shotTime <= 0) {
 		shootWave(WAVE_SHOT_YELLOW, player.x + offX, player.y + offY, player.flipped ? -1 : 1);
-		player.shotTime = 0.6;
+		player.shotTime = PLAYER_SHOT_TIME;
 		shakeMag = 10;
 		shakeTimer = 0.15;
 	}
@@ -157,4 +164,20 @@ function drawPlayer() {
 	if(playerReady) {
 		drawFrame(playerImage, player.x - camera.x, player.y - camera.y, player.anim[player.frameIndex], PLAYER_FRAME_WIDTH, PLAYER_FRAME_HEIGHT, player.flipped);
 	}
+
+	ctx.fillStyle = "rgb(250, 250, 250)";
+	ctx.font = "24px Helvetica";
+	ctx.textAlign = "left";
+	ctx.textBaseline = "middle";
+
+	for(var i = 0; i < player.health; ++i) {
+		ctx.drawImage(heartImage, i * heartImage.width, 0);
+	}
+
+	ctx.drawImage(ammoImage, 0, heartImage.height + 10);
+	ctx.fillText("" + player.ammo, ammoImage.width + 5, heartImage.height + 10 + ammoImage.height / 2);
+
+	ctx.fillText("Wave: " + spawnLevel, 0, heartImage.height + 10 + ammoImage.height + 30);
+	ctx.fillText("Enemies: " + enemies.length, 0, heartImage.height + 10 + ammoImage.height + 60);
+	ctx.fillText("Enemies Killed: " + enemiesKilled, 0, heartImage.height + 10 + ammoImage.height + 90);
 }
