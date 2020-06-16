@@ -4,6 +4,7 @@ var canvas = null;
 var ctx = null;
 
 var keysDown = {};
+var keysJustPressed = {};
 
 var camera = {
 	x : 0,
@@ -119,11 +120,16 @@ function init() {
 	pixelated(ctx);
 
 	document.addEventListener("keydown", function(e) {
+		if(!(e.keyCode in keysDown)) {
+			keysJustPressed[e.keyCode] = true;
+		}
+
 		keysDown[e.keyCode] = true;
 	});
 
 	document.addEventListener("keyup", function(e) {
 		delete keysDown[e.keyCode];
+		delete keysJustPressed[e.keyCode];
 	});
 
 	for(var i = 0; i < level.layers.length; ++i) {
@@ -222,6 +228,7 @@ function loop() {
 	update(delta);
 	draw();
 
+ttkeysJustPressed = {};
 	then = now;
 
 	requestAnimationFrame(loop);
