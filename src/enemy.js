@@ -24,6 +24,8 @@ const ENEMY_HOVER_PERIOD_FACTOR = 10;
 const ENEMY_COLLISION_RADIUS = 64;
 const ENEMY_PUSH_FORCE = 10;
 
+const ENEMY_RANDOM_DROP_CHANCE = 0.5;
+
 const ENEMY_SPRITE_OFF_X = 41;
 const ENEMY_SPRITE_OFF_Y = 18;
 
@@ -151,13 +153,25 @@ n                otherEnemy.dx += Math.cos(angle) * (ENEMY_PUSH_FORCE / 2);
                 otherEnemy.dy += Math.sin(angle) * (ENEMY_PUSH_FORCE / 2);
             }
         }
-        if(enemy.hit) {
-            enemy.health -= 1;
+        var die = function() {
             if(enemy.health <= 0) {
+                if(Math.random() <= ENEMY_RANDOM_DROP_CHANCE) {
+                    var index = Math.floor(Math.random() * POWERUP_GRAB_BAG.length);
+                    var type = POWERUP_GRAB_BAG[index];
+                    spawnPowerup(enemy.x, enemy.y, type);
+                }
+
                 addExplosion(enemy.x - EXPLOSION_FRAME_WIDTH / 2, enemy.y - EXPLOSION_FRAME_HEIGHT / 2);
                 enemies.splice(i, 1);
 
                 ++enemiesKilled;
+            }
+        }
+
+        if(enemy.hit) {
+            enemy.health -= 1;
+            if(enemy.health <= 0) {
+                die();
             }
             enemy.hit = false;
         }
