@@ -80,6 +80,7 @@ function updatePlayer(dt) {
 		player.dy += 16 * dt;
 	}
 
+	var doEcho = 32 in keysJustPressed;
 	var left = (37 in keysDown) || (65 in keysDown);
 	var right = (39 in keysDown) || (68 in keysDown);
 	var jump = (38 in keysJustPressed) || (87 in keysJustPressed);
@@ -161,6 +162,18 @@ function updatePlayer(dt) {
 
 	if(Math.abs(player.dy) >= PLAYER_TERMINAL_VEL * dt) {
 		player.dy = Math.sign(player.dy) * PLAYER_TERMINAL_VEL * dt;
+	}
+
+	if(doEcho && !echo.active && player.ammo > 0) {
+		echo.active = true;
+		echo.radius = 0;
+		echo.timer = ECHO_TIME;
+		echo.x = player.x + player.width / 2;
+		echo.y = player.y + player.height / 2;
+		player.ammo -= 1;
+
+		shakeMag = 20;
+		shakeTimer = 0.3;
 	}
 
 	move(player, player.dx, player.dy, function() {

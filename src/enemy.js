@@ -153,6 +153,18 @@ n                otherEnemy.dx += Math.cos(angle) * (ENEMY_PUSH_FORCE / 2);
                 otherEnemy.dy += Math.sin(angle) * (ENEMY_PUSH_FORCE / 2);
             }
         }
+        if(echo.active) {
+            var dist2 = distanceSqr(echo.x, echo.y, enemy.x + enemy.width / 2, enemy.y + enemy.height / 2);
+
+            if(dist2 < ENEMY_COLLISION_RADIUS * ENEMY_COLLISION_RADIUS + echo.radius * echo.radius) {
+                var angle = Math.atan2(echo.y - enemy.y, echo.x - enemy.x);
+                var overlap = Math.sqrt(dist2) - (ENEMY_COLLISION_RADIUS + echo.radius);
+
+                enemy.dx += Math.cos(angle) * overlap * dt;
+                enemy.dy += Math.sin(angle) * overlap * dt;
+            }
+        }
+
         var die = function() {
             if(enemy.health <= 0) {
                 if(Math.random() <= ENEMY_RANDOM_DROP_CHANCE) {

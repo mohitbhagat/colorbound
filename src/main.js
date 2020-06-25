@@ -156,6 +156,18 @@ function init() {
 	}
 }
 
+/*function updateEcho(dt) {
+	if (echo.frequency === ECHO_NORMAL_FREQ){
+		echo.timer -= dt;
+		if(echo.timer <= 0) {
+			echo.active = false;
+			echo.radius = 0;
+		}
+
+		echo.radius += ECHO_SEED * dt;
+	}
+}*/
+
 function update(dt) {
 	camera.x += (player.x + player.width / 2 - canvas.width / 2 - camera.x) * dt * CAMERA_SPEED_FACTOR;
 	camera.y += (player.y + player.height / 2 - canvas.height / 2 - camera.y) * dt * CAMERA_SPEED_FACTOR;
@@ -170,6 +182,7 @@ function update(dt) {
 	updateEnemies(dt);
 	updateRockets(dt);
 	updatePlayer(dt);
+	updateEcho(dt);
 	updateWaves(dt);
 	updateExplosions(dt);
 	updateSpawners(dt);
@@ -214,6 +227,7 @@ function draw() {
 
 	drawSpawners();
 	drawPlayer();
+	drawEcho();
 	drawWaves();
 	drawEnemies();
 	drawRockets();
