@@ -1,4 +1,4 @@
-// colorbound
+"use strict";
 
 var canvas = null;
 var ctx = null;
@@ -23,10 +23,11 @@ var collisionLayer = (function() {
 	return null;
 })();
 
+const TITLE_TIME = 4;
+var titleTimer = TITLE_TIME;
+
 var shakeMag = 2;
 var shakeTimer = 0;
-
-const CAMERA_SPEED_FACTOR = 5;
 
 function collideLevel(x, y, w, h) {
 	var left = Math.floor(x / level.tilewidth);
@@ -55,29 +56,6 @@ function collideLevel(x, y, w, h) {
 	}
 
 	return false;
-}
-
-function drawFrame(image, x, y, frame, fw, fh, flip, scaleX, scaleY) {
-	scaleX = scaleX || 1;
-	scaleY = scaleY || 1;
-
-	var columns = image.width / fw;
-
-	var u = frame % columns;
-	var v = Math.floor(frame / columns);
-
-	if(!flip) {
-		ctx.drawImage(image, u * fw, v * fh, fw, fh, x, y, fw * scaleX, fh * scaleY);
-	} else {
-		ctx.save();
-
-		ctx.translate(x + fw, y);
-		ctx.scale(-1, 1);
-
-		ctx.drawImage(image, u * fw, v * fh, fw, fh, 0, 0, fw, fh);
-
-		ctx.restore();
-	}
 }
 
 function collideLineLevel(x1, y1, x2, y2) {
@@ -156,6 +134,9 @@ function init() {
 	}
 }
 
+const CAMERA_SPEED_FACTOR = 5;
+
+
 /*function updateEcho(dt) {
 	if (echo.frequency === ECHO_NORMAL_FREQ){
 		echo.timer -= dt;
@@ -172,21 +153,58 @@ function update(dt) {
 	camera.x += (player.x + player.width / 2 - canvas.width / 2 - camera.x) * dt * CAMERA_SPEED_FACTOR;
 	camera.y += (player.y + player.height / 2 - canvas.height / 2 - camera.y) * dt * CAMERA_SPEED_FACTOR;
 
-	if(shakeTimer > 0) {
-		camera.x += Math.random() * (shakeMag * 2) - shakeMag;
-		camera.y += Math.random() * (shakeMag * 2) - shakeMag;
+	if(player.health >= 0) {
+		titleTimer -= dt;
 
-		shakeTimer -= dt;
+		if(shakeTimer > 0) {
+			camera.x += Math.random() * (shakeMag * 2) - shakeMag;
+			camera.y += Math.random() * (shakeMag * 2) - shakeMag;
+
+			shakeTimer -= dt;
+		}
+
+		updateEnemies(dt);
+		updateRockets(dt);
+		updatePlayer(dt);
+		updateEcho(dt);
+		updateWaves(dt);
+		updateExplosions(dt);
+		updateSpawners(dt);
+		updatePowerups(dt);
 	}
+}
 
-	updateEnemies(dt);
-	updateRockets(dt);
-	updatePlayer(dt);
-	updateEcho(dt);
-	updateWaves(dt);
-	updateExplosions(dt);
-	updateSpawners(dt);
-	updatePowerups(dt);
+function drawFrame(image, x, y, frame, fw, fh, flip, scaleX, scaleY) {
+	scaleX = scaleX || 1;
+	scaleY = scaleY || 1;
+
+	var columns = image.width / fw;
+
+	var u = frame % columns;
+	var v = Math.floor(frame / columns);
+
+	if(!flip) {
+		ctx.drawImage(image, u * fw, v * fh, fw, fh, x, y, fw * scaleX, fh * scaleY);
+	} else {
+		ctx.save();
+
+		ctx.translate(x + fw, y);
+		ctx.scale(-1, 1);
+
+		ctx.drawImage(image, u * fw, v * fh, fw, fh, 0, 0, fw, fh);
+
+		ctx.restore();
+	}
+}
+
+function drawStars() {
+	for(var y = Math.floor(-camera.y / 32); y < Math.floor((-camera.y + canvas.height) / 32); ++y) {
+		for(var x = Math.floor(-camera.x / 32); x < Math.floor((-camera.x + canvas.width) / 32); ++x) {
+			if(Math.random() > 0.9) {
+				ctx.drawImage(starImage, x * 32, y * 32);
+			}
+		}
+	}
 }
 
 function draw() {
@@ -197,6 +215,20 @@ function draw() {
 
 	ctx.fillStyle = "#00001D";
 	ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+	if(player.health <= 0) {
+		ctx.fillStyle = "rgb(250, 250, 250)";
+		ctx.font = "32px Helvetica";
+		ctx.textAlign = "center";
+		ctx.textBaseline = "middle";
+
+		ctx.fillText("GAME OVER! PRESS CTRL+R TO RESTART.", canvas.width / 2, canvas.height / 2 + 200);
+		ctx.fillText("YOU GOT TO WAVE " + spawnLevel, canvas.width / 2, canvas.height / 2 + 240);
+
+		ctx.drawImage(titleImage, canvas.width / 2 - titleImage.width / 2, canvas.height / 2 - titleImage.height / 2);
+
+		return;
+	}
 
 	if(groundReady) {
 		var left = Math.floor(camera.x / level.tilewidth);
@@ -233,18 +265,35 @@ function draw() {
 	drawRockets();
 	drawExplosions();
 	drawPowerups();
+
+	if(titleTimer > 0) {
+		var prevAlpha = ctx.globalAlpha;
+		ctx.globalAlpha = titleTimer / TITLE_TIME;
+		ctx.drawImage(titleImage, canvas.width / 2 - titleImage.width / 2, canvas.height / 2 - titleImage.height / 2);
+		ctx.globalAlpha = prevAlpha;
+	}
 }
 
 var then = Date.now();
+var elapsed = 0;
+
+const TIME_PER_FRAME = 1000 / 60;
 
 function loop() {
 	var now = Date.now();
-	var delta = (now - then) / 1000;
+	var delta = now - then;
 
-	update(delta);
+	elapsed += delta;
+
+	while(elapsed >= TIME_PER_FRAME) {
+		update(TIME_PER_FRAME / 1000);
+		elapsed -= TIME_PER_FRAME;
+
+		keysJustPressed = {};
+	}
+
 	draw();
 
-ttkeysJustPressed = {};
 	then = now;
 
 	requestAnimationFrame(loop);
