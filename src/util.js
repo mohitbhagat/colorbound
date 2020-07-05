@@ -1,12 +1,27 @@
-function pixelated(ctx) {
-    ctx.webkitImageSmoothingEnabled = false;
-    ctx.mozImageSmoothingEnabled = false;
-    ctx.msImageSmoothingEnabled = false;
-    ctx.imageSmoothingEnabled = false;
+function safeWidth() {
+	var inner = window.innerWidth,
+		client = document.documentElement.clientWidth || inner,
+		body = document.getElementsByTagName('body')[0].clientWidth || inner;
+
+	return Math.min(inner, client, body);
 }
 
-function distanceSqr(x1, y1, x2, y2) {
-    var dx = x2 - x1;
-    var dy = y2 - y1;
-    return dx * dx + dy * dy;
+function safeHeight() {
+	var inner = window.innerHeight,
+		client = document.documentElement.clientHeight || inner,
+		body = document.getElementsByTagName('body')[0].clientHeight || inner;
+
+	return Math.min(inner, client, body) - 5;
+}
+
+function pixelated(context) {
+	var smooth = false;
+	context.mozImageSmoothingEnabled = smooth;
+	context.webkitImageSmoothingEnabled = smooth;
+	context.msImageSmoothingEnabled = smooth;
+	context.imageSmoothingEnabled = smooth;
+}
+
+function distanceSqr(ax, ay, bx, by) {
+	return (ax - bx) * (ax - bx) + (ay - by) * (ay - by);
 }
