@@ -30,7 +30,10 @@ var player = {
 	ammo : PLAYER_START_AMMO,
 	health: PLAYER_START_HEALTH,
 	loop : false,
-	doubleJumped : false
+	doubleJumped : false,
+	/*beatTimer : 0,
+	beats : [],
+	lastBeatIndex : -1*/
 };
 
 function move(ent, x, y, collideX, collideY) {

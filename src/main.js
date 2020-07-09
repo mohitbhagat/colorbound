@@ -257,6 +257,22 @@ function draw() {
 		}
 	}
 
+
+	/*if(player.echoTime > 0) {
+		if(echo.freq == ECHO_NORMAL_FREQ) {
+			ctx.fillStyle = "white";
+		} else if(echo.freq == ECHO_RED_FREQ) {
+			ctx.fillStyle = "red";
+		} else if(echo.freq == ECHO_BLUE_FREQ) {
+			ctx.fillStyle = "blue";
+		} else if(echo.freq == ECHO_YELLOW_FREQ) {
+			ctx.fillStyle = "yellow";
+		}
+
+		ctx.fillRect(player.x + player.width / 2 - ECHO_DISP_WIDTH / 2 - camera.x, player.y + player.height / 2 - ECHO_DISP_HEIGHT / 2 - camera.y,
+			ECHO_DISP_WIDTH, ECHO_DISP_HEIGHT);
+	}*/
+
 	drawSpawners();
 	drawPlayer();
 	drawEcho();
@@ -301,3 +317,5 @@ function loop() {
 
 init();
 loop();
+
+
