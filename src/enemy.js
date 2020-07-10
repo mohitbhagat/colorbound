@@ -146,12 +146,12 @@ function updateEnemies(dt) {
 
         for(var j = i + 1; j < enemies.length; ++j) {
             var otherEnemy = enemies[j];
-n            var dist2 = distanceSqr(enemy.x, enemy.y, otherEnemy.x, otherEnemy.y);
-n            if(dist2 < ENEMY_COLLISION_RADIUS * ENEMY_COLLISION_RADIUS) {
+            var dist2 = distanceSqr(enemy.x, enemy.y, otherEnemy.x, otherEnemy.y);
+            if(dist2 < ENEMY_COLLISION_RADIUS * ENEMY_COLLISION_RADIUS) {
                 var angle = Math.atan2(otherEnemy.y - enemy.y, otherEnemy.x - enemy.x);
-n                enemy.dx -= Math.cos(angle) * (ENEMY_PUSH_FORCE / 2);
+                enemy.dx -= Math.cos(angle) * (ENEMY_PUSH_FORCE / 2);
                 enemy.dy -= Math.sin(angle) * (ENEMY_PUSH_FORCE / 2);
-n                otherEnemy.dx += Math.cos(angle) * (ENEMY_PUSH_FORCE / 2);
+                otherEnemy.dx += Math.cos(angle) * (ENEMY_PUSH_FORCE / 2);
                 otherEnemy.dy += Math.sin(angle) * (ENEMY_PUSH_FORCE / 2);
             }
         }
