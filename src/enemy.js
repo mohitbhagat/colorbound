@@ -5,6 +5,7 @@ var enemiesKilled = 0;
 const ENEMY_TANGIBLE_TIME = 4;
 const ENEMY_RADIUS = 20;
 const ENEMY_INTANGIBLE_ALPHA = 0.4;
+
 const ENEMY_TYPE_LASER = 0;
 const ENEMY_TYPE_ROCKET  = 1;
 
@@ -111,6 +112,7 @@ function updateEnemies(dt) {
                         enemy.frames = ENEMY_ANIM_STOP;
                         enemy.loop = false;
                     } else {
+                        // TODO: Randomize direction
                         var dx = 0;
                         var dy = 0;
 
@@ -142,28 +144,21 @@ function updateEnemies(dt) {
                     }
                 }
             }
-        }
 
-        for(var j = i + 1; j < enemies.length; ++j) {
-            var otherEnemy = enemies[j];
-            var dist2 = distanceSqr(enemy.x, enemy.y, otherEnemy.x, otherEnemy.y);
-            if(dist2 < ENEMY_COLLISION_RADIUS * ENEMY_COLLISION_RADIUS) {
-                var angle = Math.atan2(otherEnemy.y - enemy.y, otherEnemy.x - enemy.x);
-                enemy.dx -= Math.cos(angle) * (ENEMY_PUSH_FORCE / 2);
-                enemy.dy -= Math.sin(angle) * (ENEMY_PUSH_FORCE / 2);
-                otherEnemy.dx += Math.cos(angle) * (ENEMY_PUSH_FORCE / 2);
-                otherEnemy.dy += Math.sin(angle) * (ENEMY_PUSH_FORCE / 2);
-            }
-        }
-        if(echo.active) {
-            var dist2 = distanceSqr(echo.x, echo.y, enemy.x + enemy.width / 2, enemy.y + enemy.height / 2);
+            for(var j = i + 1; j < enemies.length; ++j) {
+                var otherEnemy = enemies[j];
 
-            if(dist2 < ENEMY_COLLISION_RADIUS * ENEMY_COLLISION_RADIUS + echo.radius * echo.radius) {
-                var angle = Math.atan2(echo.y - enemy.y, echo.x - enemy.x);
-                var overlap = Math.sqrt(dist2) - (ENEMY_COLLISION_RADIUS + echo.radius);
+                var dist2 = distanceSqr(enemy.x, enemy.y, otherEnemy.x, otherEnemy.y);
 
-                enemy.dx += Math.cos(angle) * overlap * dt;
-                enemy.dy += Math.sin(angle) * overlap * dt;
+                if(dist2 < ENEMY_COLLISION_RADIUS * ENEMY_COLLISION_RADIUS) {
+                    var angle = Math.atan2(otherEnemy.y - enemy.y, otherEnemy.x - enemy.x);
+
+                    enemy.dx -= Math.cos(angle) * (ENEMY_PUSH_FORCE / 2);
+                    enemy.dy -= Math.sin(angle) * (ENEMY_PUSH_FORCE / 2);
+
+                    otherEnemy.dx += Math.cos(angle) * (ENEMY_PUSH_FORCE / 2);
+                    otherEnemy.dy += Math.sin(angle) * (ENEMY_PUSH_FORCE / 2);
+                }
             }
         }
 
@@ -179,6 +174,18 @@ function updateEnemies(dt) {
                 enemies.splice(i, 1);
 
                 ++enemiesKilled;
+            }
+        }
+
+        if(echo.active) {
+            var dist2 = distanceSqr(echo.x, echo.y, enemy.x + enemy.width / 2, enemy.y + enemy.height / 2);
+
+            if(dist2 < ENEMY_COLLISION_RADIUS * ENEMY_COLLISION_RADIUS + echo.radius * echo.radius) {
+                var angle = Math.atan2(echo.y - enemy.y, echo.x - enemy.x);
+                var overlap = Math.sqrt(dist2) - (ENEMY_COLLISION_RADIUS + echo.radius);
+
+                enemy.dx += Math.cos(angle) * overlap * dt;
+                enemy.dy += Math.sin(angle) * overlap * dt;
             }
         }
 

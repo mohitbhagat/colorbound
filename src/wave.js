@@ -16,7 +16,7 @@ const WAVE_AMPLITUDE = 8;
 
 function shootWave(shot, x, y, dir) {
     waves.push({
-        shot : shot,
+        shot : shot, 
         x : x,
         y : y,
         timer : WAVE_LIFE,
@@ -29,7 +29,7 @@ function shootWave(shot, x, y, dir) {
 function updateWaves(dt) {
     for(var i = 0; i < waves.length; ++i) {
         var wave = waves[i];
-
+    
         if(Math.abs(wave.length) >= WAVE_MAX_LENGTH) {
             wave.done = true;
             wave.length = Math.sign(wave.length) * WAVE_MAX_LENGTH;
@@ -57,7 +57,7 @@ function updateWaves(dt) {
                     }
                 });
             }
-
+            
             if(!wave.done) {
                 wave.length += WAVE_SPEED * dt * wave.dir;
             }
@@ -93,7 +93,7 @@ function drawWaves() {
             waveImage = yellowWaveImage;
         }
 
-        if(wave.dir < 0) {
+        if(wave.dir < 0) { 
             ctx.drawImage(waveImage, wave.x - camera.x + wave.length, wave.y - camera.y - WAVE_AMPLITUDE, -wave.length, WAVE_AMPLITUDE * 2);
         } else {
             ctx.drawImage(waveImage, wave.x - camera.x, wave.y - camera.y - WAVE_AMPLITUDE, wave.length, WAVE_AMPLITUDE * 2);
@@ -110,11 +110,17 @@ function drawWaves() {
             ctx.moveTo(x, y);
         }
 
+        /*if(wave.dir < 0) {
+            ctx.arc(wave.x + wave.radius - camera.x, wave.y - camera.y, wave.radius, Math.PI - Math.PI / 4, Math.PI + Math.PI / 4);
+        } else {
+            ctx.arc(wave.x - wave.radius - camera.x, wave.y - camera.y, wave.radius, -Math.PI / 4, Math.PI / 4);
+        }*/
+
         var prevLineWidth = ctx.lineWidth;
 
         ctx.lineWidth = WAVE_LINE_WIDTH;
         ctx.stroke();
-
+        
         ctx.lineWidth = prevLineWidth;
 
         ctx.globalAlpha = prevAlpha;
