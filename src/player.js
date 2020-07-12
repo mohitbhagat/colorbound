@@ -205,19 +205,36 @@ function drawPlayer() {
 		drawFrame(playerImage, player.x - camera.x - PLAYER_SPRITE_OFF_X, player.y - camera.y, player.anim[player.frameIndex], PLAYER_FRAME_WIDTH, PLAYER_FRAME_HEIGHT, player.flipped);
 	}
 
+	var iconScale = 0.5;
+	var heartW = heartImage.width * iconScale;
+	var heartH = heartImage.height * iconScale;
+	var ammoW = ammoImage.width * iconScale;
+	var ammoH = ammoImage.height * iconScale;
+	var gap = 20;
+	var iconY = 8;
+
 	ctx.fillStyle = "rgb(250, 250, 250)";
-	ctx.font = "24px Helvetica";
+	ctx.font = "16px Helvetica";
 	ctx.textAlign = "left";
 	ctx.textBaseline = "middle";
 
-	for(var i = 0; i < player.health; ++i) {
-		ctx.drawImage(heartImage, i * heartImage.width, 0);
+	var healthText = "" + player.health;
+	var ammoText = "" + player.ammo;
+	var healthTextW = ctx.measureText(healthText).width;
+	var ammoTextW = ctx.measureText(ammoText).width;
+
+	var totalW = heartW + 5 + healthTextW + gap + ammoW + 5 + ammoTextW;
+	var startX = (canvas.width - totalW) / 2;
+
+	ctx.drawImage(heartImage, startX, iconY, heartW, heartH);
+	ctx.fillText(healthText, startX + heartW + 5, iconY + heartH / 2);
+
+	var ammoX = startX + heartW + 5 + healthTextW + gap;
+	ctx.drawImage(ammoImage, ammoX, iconY, ammoW, ammoH);
+	ctx.fillText(ammoText, ammoX + ammoW + 5, iconY + ammoH / 2);
+
+	var statsEl = document.getElementById("game-stats");
+	if(statsEl) {
+		statsEl.textContent = "Wave: " + spawnLevel + "  |  Enemies: " + enemies.length + "  |  Killed: " + enemiesKilled;
 	}
-
-	ctx.drawImage(ammoImage, 0, heartImage.height + 10);
-	ctx.fillText("" + player.ammo, ammoImage.width + 5, heartImage.height + 10 + ammoImage.height / 2);
-
-	ctx.fillText("Wave: " + spawnLevel, 0, heartImage.height + 10 + ammoImage.height + 30);
-	ctx.fillText("Enemies: " + enemies.length, 0, heartImage.height + 10 + ammoImage.height + 60);
-	ctx.fillText("Enemies Killed: " + enemiesKilled, 0, heartImage.height + 10 + ammoImage.height + 90);
 }

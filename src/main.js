@@ -91,7 +91,7 @@ function init() {
 	canvas.style["top"] = "50%";
 	canvas.style["left"] = "50%";
 	canvas.style["transform"] = "translate(-50%, -50%)";
-	canvas.style["border"] = "solid";
+	canvas.style["border"] = "none";
 	
 	ctx = canvas.getContext("2d");
 

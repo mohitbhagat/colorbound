@@ -1,7 +1,7 @@
 <head>
 	<title>Colorbound</title>
 </head>
-<body>
+<body style="background-color: #00001D; margin: 0;">
 	<script src="levels/level.js"></script>
 	<script src="src/util.js"></script>
 	<script src="src/image.js"></script>
@@ -14,5 +14,6 @@
 	<script src="src/spawner.js"></script>
 	<script src="src/powerup.js"></script>
 	<script src="src/main.js"></script>
-	<p>WASD to move, J/K/L to shoot lasers, Space for echo attack. Refresh to restart</p>
+	<div id="game-stats" style="position: fixed; bottom: calc(50% - 380px); left: 50%; transform: translateX(-50%); color: #888; font-family: Helvetica, sans-serif; font-size: 14px;"></div>
+	<p style="color: #888; text-align: center; font-family: Helvetica, sans-serif;">WASD to move, J/K/L to shoot lasers, Space for echo attack. Refresh to restart</p>
 </body>
