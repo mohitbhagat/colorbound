@@ -44,7 +44,7 @@ function move(ent, x, y, collideX, collideY) {
 
 	for(var i = 0; i < SAMPLES; ++i) {
 		if(!collideLevel(ent.x + moveX, ent.y, ent.width, ent.height)) {
-			ent.x += moveX;
+			ent.x += moveX; 
 		} else {
 			if(collideX) {
 				collideX();
@@ -52,7 +52,7 @@ function move(ent, x, y, collideX, collideY) {
 			break;
 		}
 	}
-
+	
 	for(var i = 0; i < SAMPLES; ++i) {
 		if(!collideLevel(ent.x, ent.y + moveY, ent.width, ent.height)) {
 			ent.y += moveY;
@@ -82,7 +82,7 @@ function updatePlayer(dt) {
 		player.grounded = false;
 		player.dy += 16 * dt;
 	}
-
+	
 	var doEcho = 32 in keysJustPressed;
 	var left = (37 in keysDown) || (65 in keysDown);
 	var right = (39 in keysDown) || (68 in keysDown);
@@ -107,7 +107,7 @@ function updatePlayer(dt) {
 		}
 	}
 
-	if(left) {
+	if(left) { 
 		player.flipped = true;
 		player.anim = PLAYER_ANIM_RUN;
 		player.animFrameTime = PLAYER_RUN_FRAME_TIME;
@@ -179,8 +179,8 @@ function updatePlayer(dt) {
 		shakeTimer = 0.3;
 	}
 
-	move(player, player.dx, player.dy, function() {
-		player.dx = 0;
+	move(player, player.dx, player.dy, function() { 
+		player.dx = 0; 
 	}, function() {
 		player.dy = 0;
 	});

@@ -19,7 +19,7 @@ var collisionLayer = (function() {
 			return layer;
 		}
 	}
-
+	
 	return null;
 })();
 
@@ -92,7 +92,7 @@ function init() {
 	canvas.style["left"] = "50%";
 	canvas.style["transform"] = "translate(-50%, -50%)";
 	canvas.style["border"] = "solid";
-
+	
 	ctx = canvas.getContext("2d");
 
 	pixelated(ctx);
@@ -104,7 +104,7 @@ function init() {
 
 		keysDown[e.keyCode] = true;
 	});
-
+	
 	document.addEventListener("keyup", function(e) {
 		delete keysDown[e.keyCode];
 		delete keysJustPressed[e.keyCode];
@@ -179,7 +179,7 @@ function drawFrame(image, x, y, frame, fw, fh, flip, scaleX, scaleY) {
 	scaleY = scaleY || 1;
 
 	var columns = image.width / fw;
-
+	
 	var u = frame % columns;
 	var v = Math.floor(frame / columns);
 
@@ -187,7 +187,7 @@ function drawFrame(image, x, y, frame, fw, fh, flip, scaleX, scaleY) {
 		ctx.drawImage(image, u * fw, v * fh, fw, fh, x, y, fw * scaleX, fh * scaleY);
 	} else {
 		ctx.save();
-
+		
 		ctx.translate(x + fw, y);
 		ctx.scale(-1, 1);
 
@@ -225,7 +225,7 @@ function draw() {
 		ctx.fillText("GAME OVER! PRESS CTRL+R TO RESTART.", canvas.width / 2, canvas.height / 2 + 200);
 		ctx.fillText("YOU GOT TO WAVE " + spawnLevel, canvas.width / 2, canvas.height / 2 + 240);
 
-		ctx.drawImage(titleImage, canvas.width / 2 - titleImage.width / 2, canvas.height / 2 - titleImage.height / 2);
+		ctx.drawImage(titleImage, canvas.width / 2 - titleImage.width / 2, canvas.height / 2 - titleImage.height / 2);		
 
 		return;
 	}
@@ -242,7 +242,7 @@ function draw() {
 			if(layer.type == "tilelayer") {
 				for(var y = top; y < bottom; ++y) {
 					if(y < 0 || y >= layer.height) continue;
-
+					
 					for(var x = left; x < right; ++x) {
 						if(x < 0 || x >= layer.width) continue;
 
@@ -269,7 +269,7 @@ function draw() {
 			ctx.fillStyle = "yellow";
 		}
 
-		ctx.fillRect(player.x + player.width / 2 - ECHO_DISP_WIDTH / 2 - camera.x, player.y + player.height / 2 - ECHO_DISP_HEIGHT / 2 - camera.y,
+		ctx.fillRect(player.x + player.width / 2 - ECHO_DISP_WIDTH / 2 - camera.x, player.y + player.height / 2 - ECHO_DISP_HEIGHT / 2 - camera.y, 
 			ECHO_DISP_WIDTH, ECHO_DISP_HEIGHT);
 	}*/
 
@@ -303,19 +303,20 @@ function loop() {
 
 	while(elapsed >= TIME_PER_FRAME) {
 		update(TIME_PER_FRAME / 1000);
-		elapsed -= TIME_PER_FRAME;
-
+		elapsed -= TIME_PER_FRAME;	
+			
 		keysJustPressed = {};
 	}
 
 	draw();
 
 	then = now;
-
+	
 	requestAnimationFrame(loop);
 }
 
 init();
 loop();
+
 
 
