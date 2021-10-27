@@ -4,7 +4,7 @@ A game created in 48 hours for the global game jam at University of Waterloo.
 ------------------------------------------------------------------------------
 Description:
 I made this game with a group of 3 other teammates. Some of my contributions
-were writing some of the code, designing game mechanics and creating textures
+were writing code, designing game mechanics and creating textures
 using GIMP.
 
 ------------------------------------------------------------------------------
