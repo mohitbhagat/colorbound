@@ -1,12 +1,3 @@
-# Global Game Jam 2017 Project
-A game created in 48 hours for the global game jam at University of Waterloo.
-
-------------------------------------------------------------------------------
-Description:
-I made this game with a group of 3 other teammates. Some of my contributions
-were writing code, designing game mechanics and creating textures
-using GIMP.
-
 ------------------------------------------------------------------------------
 HOW TO PLAY:
 To run the game, simply open the index.html in a modern browser.
